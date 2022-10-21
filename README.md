@@ -2,6 +2,9 @@
 Will Hobbs
 2021-07-22
 ***
+**2022-10-21** [solarforecastarbiter.org](https://solarforecastarbiter.org) is now [forecastarbiter.epri.com](https://forecastarbiter.epri.com). This guide needs to be updated accordingly, and new user accounts may not be available currently. Everything related to fetching NWPs and creating forecasts should still work, it's just that uploading forecasts to the arbiter may not work.
+
+***
 **2022-08-17** Consider subscribing to `NCEP.List.NOMADS-ftpprd` and `NCEP.List.Nomads-Users` mailing lists [here](https://nomads.ncep.noaa.gov/txt_descriptions/Help_Desk_doc.shtml). Among other things, this can provide information about NOMADS issues and outages. 
 ***
 **2022-02-03 Update:** Now that there is an official 64-bit Raspberry PI OS available (https://www.raspberrypi.com/news/raspberry-pi-os-64-bit/), I should try that out and update this guide accordingly. There may be some advantages to 64-bit...
