@@ -1,6 +1,31 @@
 # How to use a Rasberry Pi with SolarForecastArbiter to generate solar forecasts
 Will Hobbs
 2021-07-22
+
+
+# Table of contents
+1. [Introduction](#introduction)
+2. [Setup and Installation](#setup_and_installation)
+   1. [Get ready](#get_ready)
+   2. [Install some stuff we will need later](#install_some_stuff)
+   3. [Compile wgrib2](#wgrib2)
+   4. [Install solarforecastarbiter](#install_sfa)
+3. [Numerical Weather Prediction models (NWPs)](#nwps)
+   1. [Get setup for fetching NWP data](#fetch_setup)
+   2. [Start fetching NWP data](#fetch)
+   3. [Make sure we keep fetching](#keep_fetching)
+4. [Solar Forecasts](#solar_forecasts)
+   1. [Create forecasts on solarforecastarbiter.org](#create_forecasts)
+   2. [Python script to generate and upload forecasts](#upload_forecasts)
+   3. [Run the python forecast script on a schedule](#scheduled_forecasts)
+   4. [The end](#the_end)
+5. [Extras](#extras)
+   1. [Ideas for improvement](#ideals)
+   2. [Fetch GFS for day-ahead forecasts](#fetch_gfs)
+   3. [Fetch HRRR Hourly out to 48 hours](#48hr_hrrr)
+   4. [Backup the micro SD card periodically](#sd_backup)
+
+
 ***
 **2022-10-21** [solarforecastarbiter.org](https://solarforecastarbiter.org) is now [forecastarbiter.epri.com](https://forecastarbiter.epri.com). This guide needs to be updated accordingly, and new user accounts may not be available currently. Everything related to fetching NWPs and creating forecasts should still work, it's just that uploading forecasts to the arbiter may not work.
 
@@ -16,7 +41,7 @@ To-do list:
 	- move old files to external drive/network drive/cloud?
 - Try out 64-bit OS
 
-## Introduction
+## Introduction <a name="introduction"></a>
 This should be considered a "for fun" exercise, unless you are familiar with running a Raspberry Pi for important tasks (and know how to manage/avoid things like SD card corruption).
 
 Tested with:
@@ -36,7 +61,9 @@ Other prerequisites:
  1. have an account on solarforecastarbiter.org
  2. have a site setup so you can create (register) forecasts that match the forecast timeseries we will be generating
 
-## Get ready
+## Setup and Installation <a name="setup_and_installation"></a>
+
+### Get ready <a name="get_ready"></a>
  1. Boot up your RPi
  2. Consider: setting a new password, enabling VNC and/or installing XRDP
  3. Start with standard RPi update and upgrade. From the terminal, run:  
@@ -44,7 +71,7 @@ Other prerequisites:
 sudo apt update 
 sudo apt full-upgrade
 ```
-## Install some stuff we will need later
+### Install some stuff we will need later <a name="install_some_stuff"></a>
 Get ready for netcdf ([ref](get%20ready%20for%20netcdf4,%20from%20https://raspberrypi.stackexchange.com/questions/104791/installing-netcdf4-on-raspberry-3b)):
 ```bash
 sudo apt-get install -y libhdf5-dev libhdf5-serial-dev netcdf-bin libnetcdf-dev
@@ -53,7 +80,7 @@ Get ready for numpy ([ref](https://stackoverflow.com/questions/53784520/numpy-im
 ```bash
 sudo apt-get install -y python-dev libatlas-base-dev
 ```
-## Python environment setup and package installation
+### Python environment setup and package installation
 Create a virtual environment with `venv`. We will call it `test_venv`:
 ```bash
 python3 -m venv test_venv
@@ -97,7 +124,7 @@ and deactivate the virtual environment:
 deactivate
 ```
 
-## Compile wgrib2
+### Compile wgrib2 <a name="wgrib2"></a>
 wgrib2 is a tool from NOAA for processing grib2 files. Included in the description on [NOAA's site](https://www.cpc.ncep.noaa.gov/products/wesley/wgrib2/): *wgrib can slice and dice grib1 files. wgrib2 is more like four drawers of kitchen utensils as well as the microwave and blender.* We will use it to convert grib2 files to netcdf files. 
 Since wgrib2 is mostly intended for x86/Intel Linux, and the Raspberry Pi has an ARM processor, we need to customize a few things and compile an executable file.
 First, some setup (modified from [ref](https://github.com/SolarArbiter/solarforecastarbiter-core/blob/23ac3c7a699f720fb642c3cc7d1acb83b486c2a6/build/Dockerfile) and [ref](https://askubuntu.com/questions/1132099/ungrib-exe-usr-lib-x86-64-linux-gnu-libpng12-so-0-version-png12-0-not-fou)):
@@ -176,7 +203,7 @@ and return to /home/pi/:
 cd
 ```
 
-## Install solarforecastarbiter
+### Install solarforecastarbiter <a name="install_sfa"></a>
 Activate the virtual environment:
 ```bash
 source test_venv/bin/activate
@@ -194,8 +221,8 @@ I received 4 errors and many warnings. If you receive a bunch of errors (13 in m
 pip3 uninstall -y numpy
 pip3 install numpy
 ```
-
-## Get setup for fetching NWP data
+## Numerical Weather Prediction models (NWPs) <a name="nwps"></a>
+### Get setup for fetching NWP data <a name="fetch_setup"></a>
 Make a directory to store NWP data, e.g., /home/pi/Downloads/sfa 
 ```bash
 mkdir /home/pi/Downloads/sfa
@@ -212,7 +239,7 @@ DOMAIN = {'subregion': '',
 
 **Also note that if you do change the domain you will need to change it again if you update `solarforecastcastarbiter-core`.**
 
-## Start fetching NWP data
+### Start fetching NWP data <a name="fetch"></a>
 Activate the virtual environment:
 ```bash
 source test_venv/bin/activate
@@ -240,7 +267,7 @@ x=100; for ((n=0; n < x; n++)); do solararbiter${IFS}fetchnwp${IFS}-v${IFS}--onc
 ```
 This repeats the command `solararbiter fetchnwp -v --once /home/pi/Downloads/sfa hrrr_subhourly` 100 times, pausing 120 seconds between each run (to try to avoid NOAA download rate limits). The `${IFS}` adds necessary spaces to the command. 
 
-## Make sure we keep fetching
+### Make sure we keep fetching <a name="keep_fetching"></a>
 
 We will use `supervisor` ([supervisord.org](http://supervisord.org/)) to start the fetching process and make sure it keeps running. There's a nice introduction to using `supervisor` [here](https://serversforhackers.com/c/monitoring-processes-with-supervisord).
 
@@ -333,13 +360,14 @@ And navigate to (RPi Local IP address):9001 (e.g., http://192.168.2.98:9001/) in
 
 It appears that `supervisor` only catches the verbose output of `solararbiter -v fetchnwp` as error messages (`stderr`), so everything shows up in the `*.err.log` files, and the "tail" in the web interface doesn't show anything. 
 
-## Create forecasts on solarforecastarbiter.org
+## Solar Forecasts <a name="solar_forecasts"></a>
+### Create forecasts on solarforecastarbiter.org <a name="create_forecasts"></a>
  1. Log in to https://dashboard.solarforecastarbiter.org/. 
  2. For one of your sites, create a new forecast. 
  3. Carefully select Forecast Metadata to match the forecast(s) you will be generating. 
  4. Record the UUID(s) of the forecast(s).
 
-## Python script to generate and upload forecasts
+### Python script to generate and upload forecasts <a name="upload_forecasts"></a>
 Create a python script to generate forecasts and upload to SFA. We will name it `run_ref_fcasts_rev1.py`.  
 
 I recommend starting with two existing jupyter notebooks:
@@ -357,7 +385,7 @@ In reference_forecasts.ipynb, here are a few pointers:
 
 And, in general, consider adding some form of logging so you can see what's going on. 
 
-## Run the python forecast script on a schedule
+### Run the python forecast script on a schedule <a name="scheduled_forecasts"></a>
 We will schedule a cron job to run that script every hour. Since NWP files seem to finish processing each hour at 10-25 min after the hour, we will schedule this at 30 min after the hour (e.g., 12:30, 1:30, etc.).
 
 Open crontab:
@@ -375,13 +403,14 @@ So enter the following text at the end of the file:
 ```
 Save and close (CTRL-S, CTRL-X).
 
-## The end
+### The end <a name="the_end"></a>
 Congrats! You can reboot and keep an eye on the Raspberry Pi (to make sure NWP files are getting fetched) and on solarforecastarbiter.org (to make sure forecast data is showing up). 
 
-## Ideas for improvement
+## Extras <a name="extras"></a>
+### Ideas for improvement <a name="ideals"></a>
 I'm sure there are many ways to make this better. One area is in scheduling the python forecast script: triggering it once `solararbiter fetchnwp` finishes with a given group of NOAA NWP files would ensure that forecasts are as "fresh" as possible. There is also room for better handling of errors and issues. 
 
-## Fetch GFS for day-ahead forecasts
+### Fetch GFS for day-ahead forecasts <a name="fetch_gfs"></a>
 Fetching GFS and RAP with this setup results in "chunksize" errors for some reason (see this [issue](https://github.com/SolarArbiter/solarforecastarbiter-core/issues/699)). I wanted to look at GFS for day-ahead forecasting, and found that limiting the number of valid hours fetched for a forecast initialization time avoided the error. 
 
 You may want to create a second virtual environment, as we will be modifying the fetch process in ways that could impact the NAM and HRRR fetching. I created one called `test_venv2` and installed a new copy of `solarforecastarbiter` and requirements. 
@@ -408,7 +437,7 @@ to
 
 Then create a new `supervisor` program to run that fetch process, and forecast(s) using GFS. I'm not sure why this works, but it seems to fix the problem.
 
-## Fetch HRRR Hourly out to 48 hours
+### Fetch HRRR Hourly out to 48 hours <a name="48hr_hrrr"></a>
 The current NWP fetch process only grabs HRRR (hourly) out to 36 hours (for cycles where it goes out more than 18 hours), but HRRR has forecasts out to 48 hours (see issue [#793](https://github.com/SolarArbiter/solarforecastarbiter-core/issues/793) on GitHub). See this pull request for details on an update to get hourly forecasts out to 48 hours for relevant cycles: https://github.com/SolarArbiter/solarforecastarbiter-core/pull/794. 
 
 Setup a `supervisor` configuration file to fetch:
@@ -435,7 +464,7 @@ sudo supervisorctl reread
 sudo supervisorctl update
 sudo supervisorctl
 ```
-## Backup the micro SD card periodically
+### Backup the micro SD card periodically <a name="sd_backup"></a>
 Follow https://www.tomshardware.com/how-to/back-up-raspberry-pi-as-disk-image.
 
 Check the USB drive's mount point path with `lsblk`. In my case it was `/media/pi/CORSAIR`:
