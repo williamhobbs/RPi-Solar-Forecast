@@ -2,6 +2,20 @@
 Will Hobbs
 2021-07-22
 
+***
+**2022-10-21 Update:** [solarforecastarbiter.org](https://solarforecastarbiter.org) is now [forecastarbiter.epri.com](https://forecastarbiter.epri.com). This guide needs to be updated accordingly, and new user accounts may not be available currently. Everything related to fetching NWPs and creating forecasts should still work, it's just that uploading forecasts to the arbiter may not work.
+
+***
+
+**2022-02-03 Update:** Now that there is an official 64-bit Raspberry PI OS available (https://www.raspberrypi.com/news/raspberry-pi-os-64-bit/), I should try that out and update this guide accordingly. There may be some advantages to 64-bit...
+***
+To-do list: 
+- Manage disk space issues elegantly. Current custom domain I'm using for HRRR results in about 14 GB/month of disk space, and when the SD card fills up, all NWP fetching stops. Could try:
+	- alerts?
+	- automatically overwrite old .nc files?
+	- move old files to external drive/network drive/cloud?
+- Try out 64-bit OS
+***
 
 # Table of contents
 1. [Introduction](#introduction)
@@ -25,21 +39,6 @@ Will Hobbs
    3. [Fetch HRRR Hourly out to 48 hours](#48hr_hrrr)
    4. [Backup the micro SD card periodically](#sd_backup)
 
-
-***
-**2022-10-21** [solarforecastarbiter.org](https://solarforecastarbiter.org) is now [forecastarbiter.epri.com](https://forecastarbiter.epri.com). This guide needs to be updated accordingly, and new user accounts may not be available currently. Everything related to fetching NWPs and creating forecasts should still work, it's just that uploading forecasts to the arbiter may not work.
-
-***
-**2022-08-17** Consider subscribing to `NCEP.List.NOMADS-ftpprd` and `NCEP.List.Nomads-Users` mailing lists [here](https://nomads.ncep.noaa.gov/txt_descriptions/Help_Desk_doc.shtml). Among other things, this can provide information about NOMADS issues and outages. 
-***
-**2022-02-03 Update:** Now that there is an official 64-bit Raspberry PI OS available (https://www.raspberrypi.com/news/raspberry-pi-os-64-bit/), I should try that out and update this guide accordingly. There may be some advantages to 64-bit...
-***
-To-do list: 
-- Manage disk space issues elegantly. Current custom domain I'm using for HRRR results in about 14 GB/month of disk space, and when the SD card fills up, all NWP fetching stops. Could try:
-	- alerts?
-	- automatically overwrite old .nc files?
-	- move old files to external drive/network drive/cloud?
-- Try out 64-bit OS
 
 ## Introduction <a name="introduction"></a>
 This should be considered a "for fun" exercise, unless you are familiar with running a Raspberry Pi for important tasks (and know how to manage/avoid things like SD card corruption).
@@ -222,6 +221,8 @@ pip3 uninstall -y numpy
 pip3 install numpy
 ```
 ## Numerical Weather Prediction models (NWPs) <a name="nwps"></a>
+Consider subscribing to `NCEP.List.NOMADS-ftpprd` and `NCEP.List.Nomads-Users` mailing lists [here](https://nomads.ncep.noaa.gov/txt_descriptions/Help_Desk_doc.shtml). Among other things, this can provide information about NOMADS issues and outages. 
+
 ### Get setup for fetching NWP data <a name="fetch_setup"></a>
 Make a directory to store NWP data, e.g., /home/pi/Downloads/sfa 
 ```bash
