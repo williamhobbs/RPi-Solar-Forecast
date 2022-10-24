@@ -71,7 +71,7 @@ sudo apt update
 sudo apt full-upgrade
 ```
 ### Install some stuff we will need later <a name="install_some_stuff"></a>
-Get ready for netcdf ([ref](get%20ready%20for%20netcdf4,%20from%20https://raspberrypi.stackexchange.com/questions/104791/installing-netcdf4-on-raspberry-3b)):
+Get ready for netcdf ([ref](https://raspberrypi.stackexchange.com/questions/104791/installing-netcdf4-on-raspberry-3b)):
 ```bash
 sudo apt-get install -y libhdf5-dev libhdf5-serial-dev netcdf-bin libnetcdf-dev
 ```
