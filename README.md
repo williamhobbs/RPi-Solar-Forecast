@@ -16,6 +16,7 @@ To-do list:
 	- move old files to external drive/network drive/cloud?
 - Try out 64-bit OS
 - Switch to using `sed` for modifying the wgrib2 makefile, e.g., `sed -i 's/USE_NETCDF3=1/USE_NETCDF3=0/g' makefile`. This will make it easier to turn most of this guide into a single setup script.
+- Make most of this guide available as a single setup script that prompts the user for a custom NWP domain (lat/lon range).
 ***
 
 # Table of contents
