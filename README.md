@@ -178,7 +178,7 @@ make
 Now wait up to 1 or 2 hours for wgrib2 to compile, hopefully with no errors (some warnings along the way are expected). Go for a walk, make some coffee, etc...
 
 Try executing wgrib2:
-```'bash
+```bash
 wgrib2/wgrib2 -config
 ```
 It should return something that looks like:
