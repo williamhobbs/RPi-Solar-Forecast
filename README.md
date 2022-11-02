@@ -225,7 +225,7 @@ pip3 install numpy
 ## Numerical Weather Prediction models (NWPs) <a name="nwps"></a>
 Consider subscribing to `NCEP.List.NOMADS-ftpprd` and `NCEP.List.Nomads-Users` mailing lists [here](https://nomads.ncep.noaa.gov/txt_descriptions/Help_Desk_doc.shtml). Among other things, this can provide information about NOMADS issues and outages. 
 
-### Get setup for fetching NWP data <a name="fetch_setup"></a>
+### Get set up for fetching NWP data <a name="fetch_setup"></a>
 Make a directory to store NWP data, e.g., /home/pi/Downloads/sfa 
 ```bash
 mkdir /home/pi/Downloads/sfa
