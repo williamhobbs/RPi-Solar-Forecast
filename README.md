@@ -418,7 +418,7 @@ Fetching GFS and RAP with this setup results in "chunksize" errors for some reas
 
 You may want to create a second virtual environment, as we will be modifying the fetch process in ways that could impact the NAM and HRRR fetching. I created one called `test_venv2` and installed a new copy of `solarforecastarbiter` and requirements. 
 
-Open the file `nwp.py` in `/test_venv2/lib.python3.7/site-packages/solarforecastarbiter/io/fetch`. Under `GFS_0P25_1HR`, change:
+Open the file `nwp.py` in `/test_venv2/lib/python3.7/site-packages/solarforecastarbiter/io/fetch`. Under `GFS_0P25_1HR`, change:
 ```py
 'valid_hr_gen': lambda x: chain(range(120), range(120, 240, 3),
                                 range(240, 385, 12)),
