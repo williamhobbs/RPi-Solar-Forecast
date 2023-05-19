@@ -436,7 +436,7 @@ to
 ```py
 	else:
 		chunksizes.append(21)
-```	
+```
 
 Then create a new `supervisor` program to run that fetch process, and forecast(s) using GFS. I'm not sure why this works, but it seems to fix the problem.
 
@@ -451,7 +451,7 @@ sudo nano sfa_fetch_hrrr_hourly.conf
 Put this in the file:
 ```bash
 [program:sfa_fetch_hrrr_hourly]
-command=bash -c "sleep 300 && source /home/pi/test_venv/bin/activate && solarar$
+command=bash -c "sleep 300 && source /home/pi/test_venv/bin/activate && solararbiter fetchnwp -v /home/pi/Downloads/sfa hrrr_hourly"
 startsecs=0
 directory=/home/pi/Python/SFA
 autostart=true
