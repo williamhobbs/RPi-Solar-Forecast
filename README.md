@@ -38,7 +38,7 @@ To-do list:
 5. [Extras](#extras)
    1. [Ideas for improvement](#ideals)
    2. [Fetch GFS for day-ahead forecasts](#fetch_gfs)
-   3. [Fetch HRRR Hourly out to 48 hours](#48hr_hrrr)
+   3. [Fetch and run HRRR Hourly out to 48 hours](#48hr_hrrr)
    4. [Backup the micro SD card periodically](#sd_backup)
 
 
