@@ -40,6 +40,7 @@ To-do list:
    2. [Fetch GFS for day-ahead forecasts](#fetch_gfs)
    3. [Fetch and run HRRR Hourly out to 48 hours](#48hr_hrrr)
    4. [Backup the micro SD card periodically](#sd_backup)
+   5. [Stop the forecasting service](#stop_forecasting)
 
 
 ## Introduction <a name="introduction"></a>
@@ -554,6 +555,13 @@ Then shrink it:
 ```
 cd /media/pi/CORSAIR/
 sudo pishrink.sh -z RPi_forecasting_backup_image_20220702.img
+```
+
+### Stop the forecasting service <a name="stop_forecasting"></a>
+If you want to stop running the forecasts, you need to stop `supervisor`. This can be done a few different ways:
+ 1. Remove the ".conf" files in `/etc/supervisor/conf.d`
+ 2. Rename the extension of the ".conf" files in `/etc/supervisor/conf.d`
+ 3. Stop `supervisor` with `sudo systemctl disable supervisor` and a reboot
 
 ***
 RPi-Solar_Forecast (c) by Will Hobbs
